@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link href="css/styles.css" rel="stylesheet">
+    <script src="js/vue.js"></script>
+</head>
+
+<body>
+	<div class="wrapper">
+		<div class="sample">
+			<button class="btn btn-success" @click="addNumber">Add number</button>
+			<button class="btn btn-primary" @click="sortNumbers">Sort
+			</button>
+			<ul>
+				<li v-for="(number, index) in numbers"
+					v-on:mouseenter="$event.target.style.color = 'red'"
+					v-on:mouseleave="$event.target.style.color = 'black'"
+					>
+					{{index}} - {{number}}
+				</li>
+			</ul>
+		</div>
+	</div>
+
+
+	<script>
+
+		let sample = new Vue({
+			el: '.sample',
+			data: {
+				numbers: []
+			},
+			methods: {
+				addNumber(){
+					this.numbers.push(Math.floor(Math.random() * 10))
+					this.sortNumbers()
+				},
+				sortNumbers(){
+					this.numbers.sort((a, b)=>{
+						return a > b ? 1 : -1
+					})
+				}
+			}			
+		})
+
+
+	</script>
+</body>
+</html>

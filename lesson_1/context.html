@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link href="css/styles.css" rel="stylesheet">
+    <script src="js/vue.js"></script>
+</head>
+
+<body>
+	<div class="wrapper">
+		<div class="sample">
+			<input type="text"
+			 		v-on:input="name = $event.target.value"
+					v-on:change="onChange"
+					>
+			<hr>
+			<h2>Hello, {{ $data.name }}</h2>
+		</div>
+	</div>
+
+	<script>
+		new Vue({
+			el: '.sample',
+			data: {
+				name: ''
+			},
+			methods: {
+				onChange(e){
+					console.log(this)
+					console.log(e)
+				}
+			},
+			computed: {
+
+			}
+		})
+	</script>
+</body>
+</html>

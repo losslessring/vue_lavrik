@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1</title>
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link href="css/styles.css" rel="stylesheet">
+    <script src="js/vue.js"></script>
+</head>
+
+<body>
+	<div class="wrapper">
+		<div class="sample">
+			<div v-if="formVisible">
+				<h4>Email</h4>
+    			<input type="text" v-model="email">
+				<h4>First Name</h4>
+    			<input type="text" v-model="firstName">
+    			<h4>Last Name</h4>
+    			<input type="text" v-model="lastName">
+    			<h4>Phone</h4>
+    			<input type="text" v-model="phone">
+    			<h4>Guests</h4>
+    			<button class="btn btn-success"
+					v-on:click="addGuest">Add Guest
+				</button>
+				<ul>
+					<li v-for="(guest,index) in guests">
+						<div v-on:dblclick="removeGuest($event, index)">
+							Guest {{index+1}}
+							<br>
+							<input type="text" v-model="guests[index]">							
+						</div>
+					</li>
+				</ul>
+				<hr>
+				<button class="btn btn-primary" @click="formVisible = !formVisible">Send Data</button>
+			</div>
+			<div v-else>
+				<table class="table table-bordered">
+					<tr>
+						<td>Email</td>
+						<td>{{email}}</td>						
+					</tr>
+					<tr>
+						<td>Name</td>
+						<td>{{firstName}} {{lastName}}</td>						
+					</tr>
+					<tr>
+						<td>Phone</td>
+						<td>{{phone}}</td>						
+					</tr>
+					<tr>
+						<td>Guests</td>
+						<td>
+							<table>
+							<tr v-for="(guest,index) in guests">
+								<td>{{guest}}</td>
+							</tr>
+							</table>
+						</td>						
+					</tr>
+
+				</table>
+				<button class="btn btn-primary" @click="formVisible = !formVisible">Return</button>
+			</div>
+			
+		</div>
+	</div>
+
+
+	<script>
+
+		let sample = new Vue({
+			el: '.sample',
+			data: {
+				email:'',
+				firstName: '',
+				lastName: '',
+				phone: '',
+				guests:[],
+				formVisible: true
+			},
+			methods: {
+				addGuest(){
+					this.guests.push("")
+					
+				},
+				removeGuest(e,index){
+					this.guests.splice(index,1)
+				}
+
+			}			
+		})
+
+
+	</script>
+</body>
+</html>
