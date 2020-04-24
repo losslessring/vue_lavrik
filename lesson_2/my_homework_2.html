@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1</title>
+    <link rel="stylesheet" href="css//bootstrap.min.css">
+    <link href="css/styles.css" rel="stylesheet">
+    <script src="js/vue.js"></script>
+       <style>
+        .default{
+            font-style: italic;
+            color: grey;
+        }
+
+        .error{
+
+            color: red;
+        }
+
+        .valid{
+            color: green;
+
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+<div class="sample">
+    <div class="form-group">
+        <label :class="setClass">Phone</label>
+        <input type="text" 
+               class="form-control" 
+               v-model="phone"
+               
+               >
+    </div>
+    <div v-show="show">
+        {{ phone }}
+    </div>
+</div>
+</div>
+<script>
+
+    new Vue({
+        el: '.sample',
+        data: {
+            outputClass: 'default',
+            styleClass: {
+                default: 'default',
+                error: 'error',
+                valid: 'valid'
+
+            },
+            phone: '',
+            show: false,
+            untouched: true,
+            pattern: /^[0-9]*$/
+        },
+        methods:{
+            inputCheck(){
+                //let pattern = /^[0-9]*$/;
+                
+
+                if(this.pattern.test(this.phone)){
+                    return true    
+                } else{
+                    return false
+                }
+            },
+            emptyCheck(){
+                if(this.phone == ''){
+                    return true
+                } else {
+                    return false
+                }
+            }
+
+        },
+        computed:{
+             setClass(){
+
+                if(this.emptyCheck()){
+                    return this.styleClass.default
+                }
+                //console.log(this.ouputClass)
+                if (!this.inputCheck()){
+                    //this.ouputClass = this.styleClass.error
+                    return this.styleClass.error
+
+                }
+                else {
+                    //this.ouputClass = this.styleClass.valid
+                    return this.styleClass.valid
+                }
+            }
+        }
+    });
+
+</script>
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charsetProp="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1</title>
+    <link rel="stylesheet" href="css//bootstrap.min.css">
+    <link href="css/styles.css" rel="stylesheet">
+    <script src="js/vue.js"></script>
+       <style>
+        .default{
+            font-style: italic;
+            color: grey;
+        }
+
+        .error{
+            font-style: normal;
+            color: red;
+        }
+
+        .valid{
+            font-style: normal;
+            color: green;
+
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+<div class="sample">
+    <div class="progress">
+        <div class="progress-bar bg-info" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="5"
+        v-bind:style="progressbar"></div>
+    </div>
+    <div class="form-group" v-for="(input, index) in fields">
+        <label class="default" v-bind:class="fields[index]['outputClass']">{{fields[index]['name']}}</label>
+        <input type="text" 
+               class="form-control" 
+               v-model="fields[index]['value']"
+               
+               v-on:input="validate($event, index)"
+               >
+    </div>
+
+</div>
+</div>
+<script>
+
+    new Vue({
+        el: '.sample',
+        data: {
+            
+            progressbar: 0,
+
+            styleClass: {
+                default: 'default',
+                error: 'error',
+                valid: 'valid'
+            },
+            
+            fields:[
+                {                    
+                    name:'Name',
+                    value:'',
+                    pattern:/^[a-zA-Z]{2,30}$/,
+                    isValid: false,
+                    outputClass: 'default',
+                },
+                {                    
+                    name:'Phone',
+                    value:'',
+                    pattern:/^[0-9]{7,14}$/,
+                    isValid: false,
+                    outputClass: 'default',
+                },
+                {                    
+                    name:'Email',
+                    value:'',
+                    pattern:/.+/,
+                    isValid: false,
+                    outputClass: 'default',
+                },
+                {                    
+                    name:'Some Field 1',
+                    value:'',
+                    pattern:/.+/,
+                    isValid: false,
+                    outputClass: 'default',
+                },
+                {                    
+                    name:'Some Field 2',
+                    value:'',
+                    pattern:/.+/,
+                    isValid: false,
+                    outputClass: 'default',
+                },
+
+            ]
+            },
+
+
+        methods:{
+            resolvePath(obj, path){
+                 return path
+                    .replace(/['"]/g,'')                    
+                    .replace(/\[|\]\.?/g, '.')
+                    .split('.')
+                    .filter(s => s)
+                    
+                    
+            },
+            composePath(arr){
+                let obj = this
+                console.log(arr)
+                while (arr.length > 1) {
+                    console.log(obj)
+                    console.log(arr.shift())
+                    obj = obj[arr.shift()];
+                  }
+                return obj
+            },
+
+
+            getProp(path){
+
+                return this.resolvePath(this, path)
+                    .reduce((acc, val) => acc && acc[val], this)
+            },
+
+            setProp(path, value){
+                
+                //console.log(eval('this.fields[0]["outputClass"] = this.styleClass.valid'))
+                //console.log(this.resolvePath('', path))
+                console.log(this[this.composePath((this.resolvePath(this, path)))])
+                //console.log(eval('2+2'))
+                //НЕ ПОЛУЧАЕТСЯ НАСТРОИТЬ ЗАПИСЬ В ГЛУБОКО ЛЕЖАЩИЙ МАССИВ - 
+                //НЕ ПЕРЕДАТЬ В КВАДРАТЫЕ СКОБКИ ЕЩЕ ОДНИ КВАДРАТНЫЕ СКОБКИ 
+                // this.resolvePath(this, path)
+                //     .reduce((acc, val) => {
+                //         //console.log(val)
+                //         console.log(acc && acc[val]) 
+                //         return
+                //         acc && acc[val] 
+                //     }, this)
+                
+                 // this[this.resolvePath(this.fields[0], path).reduce((acc, val) => acc && acc[val], this.fields[0])] = this.styleClass.error
+                 //this['fields']['0']['outputClass'] = this.styleClass.error
+
+            },
+
+
+            inputCheck(str, pattern){
+
+
+                if(pattern.test(str)){
+                    return true    
+                } else{
+                    return false
+                }
+            },
+
+
+            setPropClass(index){
+                //console.log(this.getProp(`[fields][${index}][outputClass]`))
+                this.setProp(`fields["${index}"]["outputClass"]`, 'this.styleClass.valid')
+                // if(this.getProp(`fields[${index}][isValid]`)){
+                //     this.setProp(`[fields][${index}][outputClass]`, this.styleClass.valid)
+                // } else {
+                //     this.setProp(`[fields][${index}][outputClass]`, this.styleClass.error)
+                // }
+            },
+            calcProgressBar(){
+
+                 return this.fields.reduce(function(sum, current) {
+                    return sum + Number(current.isValid)
+                },0) 
+            },
+            setPropProgressBar(){
+                
+                //this.progressbar = `width:${this.calcProgressBar()*20}%`
+                //this.setProp('progressbar', `width:${this.calcProgressBar()*20}%`)
+            },
+
+            validate(e, index){
+                
+                
+
+                
+                    if (this.inputCheck(this.fields[index]['value'],
+                            this.fields[index]['pattern'])) {
+                        
+                        this.fields[index].isValid = true
+                        
+
+                    }
+                    else {
+                        this.fields[index].isValid = false
+                        
+                                                
+                    }
+                    this.setPropClass(index)
+                    this.setPropProgressBar()
+                //console.log(this.progressbar)
+            }
+        },
+
+    });
+
+</script>
+</body>
+</html>
