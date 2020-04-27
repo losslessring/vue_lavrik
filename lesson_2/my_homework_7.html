@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>1</title>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+       <style>
+       .wrapper{
+            padding: 15px;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        .default{
+            font-style: italic;
+            color: grey;
+        }
+
+        .error{
+            font-style: normal;
+            color: red;
+        }
+
+        .valid{
+            font-style: normal;
+            color: green;
+
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+<div class="sample">
+    <div class="progress">
+        <div class="progress-bar bg-info" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="5"
+        v-bind:style="progressbar"></div>
+    </div>
+    <div class="form-group" v-for="(input, index) in fields">
+        <label class="default" v-bind:class="fields[index]['outputClass']">{{fields[index]['name']}}</label>
+        <input type="text" 
+               class="form-control" 
+               v-model="fields[index]['value']"
+               
+               v-on:input="validate($event, index)"
+               >
+    </div>
+    <button v-if="submitButtonVisible" class="btn btn-success">Send Data</button>
+    <div>
+        <table class="table table-bordered">
+            <tr v-for="(item, index) in fields">
+                <td>{{ item.name }}</td>
+                <td>{{ item.value }}</td>
+    </div>
+
+</div>
+</div>
+<script>
+
+    new Vue({
+        el: '.sample',
+        data: {
+            
+            progressbar: 0,
+            formCompleted: false,
+            submitButtonVisible: false,
+            styleClass: {
+                default: 'default',
+                error: 'error',
+                valid: 'valid'
+            },
+            
+            fields:[
+                {                    
+                    name:'Name',
+                    value:'',
+                    pattern:/^[a-zA-Z]{2,30}$/,
+                    isValid: false,
+                    outputClass: 'default',
+                },
+                {                    
+                    name:'Phone',
+                    value:'',
+                    pattern:/^[0-9]{2,14}$/,
+                    isValid: false,
+                    outputClass: 'default',
+                },
+                {                    
+                    name:'Email',
+                    value:'',
+                    pattern:/.+/,
+                    isValid: false,
+                    outputClass: 'default',
+                },
+                {                    
+                    name:'Some Field 1',
+                    value:'',
+                    pattern:/.+/,
+                    isValid: false,
+                    outputClass: 'default',
+                },
+                {                    
+                    name:'Some Field 2',
+                    value:'',
+                    pattern:/.+/,
+                    isValid: false,
+                    outputClass: 'default',
+                },
+
+            ]
+            },
+            beforeUpdate(){
+
+            },
+
+        methods:{
+            inputCheck(str, pattern){
+
+
+                if(pattern.test(str)){
+                    return true    
+                } else{
+                    return false
+                }
+            },
+
+
+            setClass(index){
+                this.fields[index].isValid ?
+                this.fields[index].outputClass = this.styleClass.valid :
+                this.fields[index].outputClass = this.styleClass.error
+            },
+            calcFormCompletetion(){
+
+                 return this.fields.reduce(function(sum, current) {
+                    return sum + Number(current.isValid)
+                },0) 
+            },
+
+            formComplete(val){
+                if (this.calcFormCompletetion() == val){           
+                    this.formCompleted = true      
+                }
+
+            },
+            setProgressBar(){
+                
+                this.progressbar = `width:${this.calcFormCompletetion()*20}%`
+                
+            },
+
+
+            setButtonVisibility(predicate, button){
+                if(predicate){
+                    this[button] = true
+                }
+            },
+
+            validate(e, index){
+                
+                                
+                    if (this.inputCheck(this.fields[index]['value'],
+                            this.fields[index]['pattern'])) {
+                        
+                        this.fields[index].isValid = true
+                        
+
+                    }
+                    else {
+                        this.fields[index].isValid = false
+                        
+                                                
+                    }
+                    this.setClass(index)
+                    this.setProgressBar()
+                    this.formComplete(5)
+                    this.setButtonVisibility(this.formCompleted,'submitButtonVisible')
+
+
+                
+            }
+        },
+
+    });
+
+</script>
+</body>
+</html>
